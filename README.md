@@ -40,6 +40,7 @@ options:
                         Method for calling peak overlaps (two options): 'min': call minimum overlapping peak area 'max': call maximum overlap as peak
   --no_discard_zeros    Treat zero scores as non-empty reads in raw data
   --seed SEED           Random seed
+  --outdir OUTDIR       Specify custom output directory, with simplified output file name(s)
 ```
 
 - `N`: The number of random shuffle iterations to perform. The default is `100`. The higher the number, the more accurate the FDR will be, but the longer the program will take to run.
@@ -51,6 +52,7 @@ options:
 - `UNIFIED_PEAKS`: The method for calling peak overlaps. The default is `max`. If `max`, the maximum overlap is called as the peak thus results in fewer but larger peaks. If `min`, the minimum overlap is called as one peak and results in more but smaller peaks.
 - `no_discard_zeros`: If set, treat zero scores as non-empty reads in raw data. The default is `False`. This is useful for data that has a lot of zeros, such as ChIP-seq data.
 - `SEED`: Random seed used for shuffling. The default is `0`.
+- `OUTDIR`: Path to write output file(s) to. This also will simplify the file name(s), for easier implementation of this script with the Snakemake workflow management system. The default is `False`.
 
 ## Examples
 

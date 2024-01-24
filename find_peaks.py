@@ -52,7 +52,7 @@ PEAK = tuple[CHROM, START, END, SCORE, SCORE, COUNT, LEN]
 SIG_PEAK = tuple[CHROM, START, END, SCORE, SCORE, COUNT, LEN, FDR]
 OUTPUT_PEAK = tuple[CHROM, _PH, _PH, START, END, SCORE, _PH, _PH, COMMENT]
 
-version = "1.1.0"
+version = "1.2.0"
 
 parser = argparse.ArgumentParser(
     description="Simple FDR random permutation peak caller",
@@ -113,11 +113,18 @@ parser.add_argument(
     help="Random seed",
 )
 parser.add_argument(
+    "--outdir",
+    type=str,
+    default=False,
+    help="Specify custom output directory, with simplified output file name(s)",
+)
+parser.add_argument(
     "files",
     type=str,
     nargs="+",
     help="Input files in bedgraph or GFF format",
 )
+
 args = parser.parse_args()
 
 assert 0 <= args.frac <= 1, "Fraction must be between 0 and 1"
@@ -535,12 +542,20 @@ def main():
         # path/to/file.bedgraph => path/to, file, .bedgraph
         dir, (name, ext) = (os.path.dirname(fn), os.path.splitext(os.path.basename(fn)))
 
-        # Output file names
-        fn_base_date = "peak_analysis." + name + _PH(".") + date
-        base_dir = os.path.join(dir, fn_base_date)
-        out = os.path.join(base_dir, name + f"-FDR{args.fdr:.2f}")
-        out_peak_unified_track = out + ".peaks.gff"
-        out_peaks = out + "_FDR-data"
+        # if no --outdir argument is given, run original code for output files
+        if not args.outdir: # original output file names
+                # Output file names
+                fn_base_date = "peak_analysis." + name + _PH(".") + date
+                base_dir = os.path.join(dir, fn_base_date)
+                out = os.path.join(base_dir, name + f"-FDR{args.fdr:.2f}")
+                out_peak_unified_track = out + ".peaks.gff"
+                out_peaks = out + "_FDR-data"
+        else: # simplify output file names and write to specified directory
+            name = name.split("-vs-Dam")[0]
+            base_dir = args.outdir
+            out = os.path.join(base_dir, name)
+            out_peak_unified_track = out + ".peaks.gff"
+            out_peaks = out + ".data.txt"
 
         # Load gff/bedgraph data files
         probes = load_gff(fn)
