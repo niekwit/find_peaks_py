@@ -385,7 +385,7 @@ def calculate_fdr(
             # This happens when there are only one sized peaks found in random sampling
             sys.stderr.write(
                 f"WARNING: No regression result found for peak min value of {pm}, "
-                + f"try using a higher N than {args.N} for sufficient sampling"
+                + f"try using a higher N than {args.n} for sufficient sampling"
                 + (
                     f", or using a lower min_count than {args.min_count} for more peaks"
                     if args.min_count > 2
